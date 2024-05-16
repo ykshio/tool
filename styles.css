@@ -58,3 +58,8 @@ body {
     margin: 0;
     padding: 0;
 }
+
+#input,
+#preview {
+    font-family: Monaco, monospace;
+}
