@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字変換ツール</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        pre {
+            white-space: pre-wrap; /* 改行を保持 */
+            word-wrap: break-word; /* 長い単語を折り返す */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center mb-4">文字変換ツール</h1>
+    <div class="mb-3">
+        <label for="inputText" class="form-label">入力テキスト</label>
+        <textarea id="inputText" class="form-control" rows="5" placeholder="ここにテキストを入力してください..."></textarea>
+    </div>
+    <button id="convertButton" class="btn btn-primary">変換</button>
+    
+    <h3 class="mt-4">変換後のテキスト</h3>
+    <pre id="outputText" class="border p-3" style="min-height: 100px;"></pre>
+    
+    <!-- コピー用ボタン -->
+    <button id="copyButton" class="btn btn-secondary mt-3" style="display:none;">コピー</button>
+</div>
+
+<script>
+    document.getElementById('convertButton').addEventListener('click', function() {
+        let inputText = document.getElementById('inputText').value;
+
+        // 「で」を「．」、「、」を「→，」に変換
+        let outputText = inputText.replace(/で/g, '．').replace(/、/g, '→，');
+        
+        // 改行を保持したまま表示
+        document.getElementById('outputText').textContent = outputText;
+        
+        // コピーボタンを表示
+        document.getElementById('copyButton').style.display = 'inline-block';
+        
+        // コピーボタンの動作
+        document.getElementById('copyButton').addEventListener('click', function() {
+            // 変換後のテキストをコピー
+            navigator.clipboard.writeText(outputText).then(function() {
+                alert('クリップボードにコピーしました！');
+            }).catch(function(err) {
+                alert('コピーに失敗しました: ' + err);
+            });
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
