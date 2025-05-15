@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>改行をスペースに変換</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background-color: #f4f4f4;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 16px;
+      padding: 0.5em;
+      box-sizing: border-box;
+    }
+    .output {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin-top: 1em;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.5em 1em;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>改行をスペースに変換ツール</h1>
+  <textarea id="input" placeholder="ここに文章を入力してください"></textarea>
+
+  <div class="output" id="output"></div>
+  <button onclick="copyToClipboard()">コピー</button>
+
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    input.addEventListener('input', () => {
+      const converted = input.value.replace(/\r?\n/g, ' ');
+      output.textContent = converted;
+    });
+
+    function copyToClipboard() {
+      const text = output.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("コピーしました！");
+      }).catch(err => {
+        alert("コピーに失敗しました: " + err);
+      });
+    }
+  </script>
+</body>
+</html>
+
