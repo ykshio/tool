@@ -53,7 +53,7 @@
     function copyToClipboard() {
       const text = output.textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert("コピーしました！");
+        //alert("コピーしました！");
       }).catch(err => {
         alert("コピーに失敗しました: " + err);
       });
