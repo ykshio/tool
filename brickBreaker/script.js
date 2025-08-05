@@ -12,14 +12,13 @@ let speedMultiplier = 1;
 
 const paddleHeight = 10;
 const paddleWidth = 75;
-let paddleX = (canvas.width - paddleWidth) / 2;
+let paddleX;
 
 let rightPressed = false;
 let leftPressed = false;
 let shiftPressed = false;
 let isPaused = false;
 let spacePressed = false;
-
 
 let score = 0;
 let lives = 3;
@@ -28,22 +27,38 @@ const heartImage = new Image();
 heartImage.src = "images/heart.svg";
 
 let bricks = [];
-const brickRowCount = 9;
-const brickColumnCount = 8;
-const brickWidth = 45;
+
 const brickHeight = 20;
-const brickPadding = 10;
+const brickPadding = 8;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
-// ブロックをランダムに配置
+let brickColumnCount;
+let brickRowCount;
+let brickWidth;
+
+function adjustBrickLayout() {
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // 横方向：最大列数は canvas幅-左右余白 を (minBrickWidth+padding) で割った値
+  const minBrickWidth = 40;
+  brickColumnCount = Math.floor((canvasWidth - 2 * brickOffsetLeft) / (minBrickWidth + brickPadding));
+
+  // 列数に合わせてブロック幅を計算（paddingも含む）
+  brickWidth = (canvasWidth - 2 * brickOffsetLeft - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
+
+  // 縦方向：行数は canvas高さの30%くらいを目安に
+  const availableHeight = canvasHeight * 0.3;
+  brickRowCount = Math.floor((availableHeight - brickOffsetTop) / (brickHeight + brickPadding));
+}
+
 function initBricks() {
   bricks = [];
   const totalBricks = brickRowCount * brickColumnCount;
-  const activeBricks = Math.floor(Math.random() * (totalBricks * 0.3)) + Math.floor(totalBricks * 0.3); // 30〜60%
-  const indices = [];
+  const activeBricks = Math.floor(Math.random() * (totalBricks * 0.3)) + Math.floor(totalBricks * 0.3); // 30～60%のランダム
 
-  // 全インデックスをリスト化してシャッフル
+  const indices = [];
   for (let i = 0; i < totalBricks; i++) indices.push(i);
   indices.sort(() => Math.random() - 0.5);
   const activeIndices = new Set(indices.slice(0, activeBricks));
@@ -62,6 +77,7 @@ function initBricks() {
 }
 
 function resetBallAndPaddle() {
+  paddleX = (canvas.width - paddleWidth) / 2;
   x = paddleX + paddleWidth / 2;
   y = canvas.height - paddleHeight - ballRadius;
   dx = 2;
@@ -72,11 +88,8 @@ function resetBallAndPaddle() {
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
 document.addEventListener("keydown", controlHandler);
-document.addEventListener("keyup", controlHandler);
 document.addEventListener("keyup", (e) => {
-  if (e.code === "Space") {
-    spacePressed = false;
-  }
+  if (e.code === "Space") spacePressed = false;
 });
 
 function keyDownHandler(e) {
@@ -91,11 +104,9 @@ function keyUpHandler(e) {
   else if (e.key === "Shift") shiftPressed = false;
 }
 
-
 function controlHandler(e) {
   if (e.code === "Space" && !spacePressed) {
     spacePressed = true;
-
     if (!ballLaunched && !isPaused) {
       ballLaunched = true;
     } else if (ballLaunched) {
@@ -106,6 +117,35 @@ function controlHandler(e) {
   }
 }
 
+// タッチ操作対応
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
+canvas.addEventListener('touchend', () => {
+  rightPressed = false;
+  leftPressed = false;
+});
+function handleTouch(e) {
+  e.preventDefault();
+  const touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+  if (touchX < canvas.width / 2) {
+    leftPressed = true;
+    rightPressed = false;
+  } else {
+    rightPressed = true;
+    leftPressed = false;
+  }
+}
+
+// タップで発射・ポーズ切替
+canvas.addEventListener('click', () => {
+  if (!ballLaunched && !isPaused) {
+    ballLaunched = true;
+  } else if (ballLaunched) {
+    isPaused = !isPaused;
+    overlay.textContent = isPaused ? "PAUSED" : "";
+    overlay.classList.toggle("hidden", !isPaused);
+  }
+});
 
 function drawBall() {
   ctx.beginPath();
@@ -244,6 +284,7 @@ restartBtn.addEventListener("click", () => {
 });
 
 // 初期化
+adjustBrickLayout();
 initBricks();
 resetBallAndPaddle();
 draw();
