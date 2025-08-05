@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+canvas {
+  background: #000;
+  border: 2px solid #fff;
+}
+
+#overlay {
+  position: absolute;
+  color: white;
+  font-size: 2em;
+  text-align: center;
+  top: 30%;
+  width: 100%;
+  z-index: 10;
+}
+
+#restartBtn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+}
+
+.hidden {
+  display: none;
+}
