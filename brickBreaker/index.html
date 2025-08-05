@@ -1,16 +1,55 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ブロック崩し</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* 全体中央配置用 */
+    #gameContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #touchControls {
+      margin-top: 12px;
+    }
+
+    #touchControls button {
+      width: 70px;
+      height: 40px;
+      font-size: 20px;
+      margin: 5px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #btnSpace {
+      width: 90px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
   <div id="overlay" class="hidden">
     <div id="messageText"></div>
     <button id="restartBtn" class="hidden">リスタート</button>
   </div>
-  <canvas id="gameCanvas" width="480" height="640"></canvas>
+
+  <!-- ラッパーで縦並びに -->
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="480" height="640"></canvas>
+
+    <!-- タッチ操作用ボタン -->
+    <div id="touchControls">
+      <button id="btnSpace">space</button>
+      <button id="btnShift">Shift</button>
+      <button id="btnLeft">←</button>
+      <button id="btnRight">→</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>

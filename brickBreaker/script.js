@@ -41,14 +41,11 @@ function adjustBrickLayout() {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // 横方向：最大列数は canvas幅-左右余白 を (minBrickWidth+padding) で割った値
   const minBrickWidth = 40;
   brickColumnCount = Math.floor((canvasWidth - 2 * brickOffsetLeft) / (minBrickWidth + brickPadding));
 
-  // 列数に合わせてブロック幅を計算（paddingも含む）
   brickWidth = (canvasWidth - 2 * brickOffsetLeft - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
 
-  // 縦方向：行数は canvas高さの30%くらいを目安に
   const availableHeight = canvasHeight * 0.3;
   brickRowCount = Math.floor((availableHeight - brickOffsetTop) / (brickHeight + brickPadding));
 }
@@ -117,27 +114,70 @@ function controlHandler(e) {
   }
 }
 
-// タッチ操作対応
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
-canvas.addEventListener('touchend', () => {
-  rightPressed = false;
-  leftPressed = false;
-});
-function handleTouch(e) {
-  e.preventDefault();
-  const touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
-  if (touchX < canvas.width / 2) {
-    leftPressed = true;
-    rightPressed = false;
-  } else {
-    rightPressed = true;
-    leftPressed = false;
-  }
+// タッチ＆マウスイベントの共通関数を作成（押下・離上を処理）
+function addButtonPressListeners(button, onPress, onRelease) {
+  // タッチ操作
+  button.addEventListener("touchstart", e => {
+    e.preventDefault();
+    onPress();
+  });
+  button.addEventListener("touchend", e => {
+    e.preventDefault();
+    onRelease();
+  });
+  button.addEventListener("touchcancel", e => {
+    e.preventDefault();
+    onRelease();
+  });
+  // マウス操作
+  button.addEventListener("mousedown", e => {
+    e.preventDefault();
+    onPress();
+  });
+  button.addEventListener("mouseup", e => {
+    e.preventDefault();
+    onRelease();
+  });
+  button.addEventListener("mouseleave", e => {
+    e.preventDefault();
+    onRelease();
+  });
 }
 
-// タップで発射・ポーズ切替
-canvas.addEventListener('click', () => {
+// ボタン操作セットアップ
+const btnLeft = document.getElementById("btnLeft");
+const btnRight = document.getElementById("btnRight");
+const btnSpace = document.getElementById("btnSpace");
+const btnShift = document.getElementById("btnShift");
+
+addButtonPressListeners(btnLeft,
+  () => { leftPressed = true; },
+  () => { leftPressed = false; }
+);
+
+addButtonPressListeners(btnRight,
+  () => { rightPressed = true; },
+  () => { rightPressed = false; }
+);
+
+addButtonPressListeners(btnShift,
+  () => { shiftPressed = true; },
+  () => { shiftPressed = false; }
+);
+
+// btnSpaceはクリック／タッチで「発射 or ポーズ切替」
+btnSpace.addEventListener("touchstart", e => {
+  e.preventDefault();
+  if (!ballLaunched && !isPaused) {
+    ballLaunched = true;
+  } else if (ballLaunched) {
+    isPaused = !isPaused;
+    overlay.textContent = isPaused ? "PAUSED" : "";
+    overlay.classList.toggle("hidden", !isPaused);
+  }
+});
+btnSpace.addEventListener("click", e => {
+  e.preventDefault();
   if (!ballLaunched && !isPaused) {
     ballLaunched = true;
   } else if (ballLaunched) {
@@ -270,7 +310,6 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-// リスタート処理
 restartBtn.addEventListener("click", () => {
   score = 0;
   lives = 3;
@@ -283,7 +322,6 @@ restartBtn.addEventListener("click", () => {
   draw();
 });
 
-// 初期化
 adjustBrickLayout();
 initBricks();
 resetBallAndPaddle();
