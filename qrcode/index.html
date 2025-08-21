@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRコード一括生成ツール (JS版)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 QRコード一括生成ツール</h1>
+        <p>URLを1行に1つずつ入力してください。入力するとリアルタイムで下にQRコードが生成されます。</p>
+        
+        <textarea id="urls" rows="10" placeholder="https://www.google.com&#10;https://www.github.com"></textarea>
+        
+        <div id="qrcode-container"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
