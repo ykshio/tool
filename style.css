@@ -1,0 +1,69 @@
+/* --- 全体のスタイル設定 --- */
+body {
+    margin: 0;
+    font-family: 'Noto Sans JP', sans-serif; /* Google Fontsで見やすいフォントを指定 */
+    background-color: #f0f2f5; /* 背景を薄いグレーに */
+    color: #333; /* 基本の文字色 */
+    line-height: 1.6;
+}
+
+/* --- 中央寄せのためのコンテナ --- */
+.container {
+    max-width: 960px;
+    margin: 40px auto; /* 上下に余白、左右は自動で中央に */
+    padding: 20px;
+}
+
+/* --- ヘッダー（タイトル部分） --- */
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+header h1 {
+    font-size: 2.5rem; /* remは文字サイズの単位 */
+    color: #1d3557;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* --- ツールカードのグリッドレイアウト --- */
+.tool-grid {
+    display: grid;
+    /* 画面幅に応じて列数を自動調整 */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; /* カード間の隙間 */
+}
+
+/* --- ツールカード本体のスタイル --- */
+.tool-card {
+    background-color: #ffffff;
+    border-radius: 12px; /* 角を丸くする */
+    padding: 25px;
+    text-decoration: none; /* リンクの下線を消す */
+    color: inherit; /* 親要素の文字色を継承 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 影を付けて立体感を出す */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* アニメーション効果 */
+}
+
+/* --- カードにマウスを乗せた時の効果 --- */
+.tool-card:hover {
+    transform: translateY(-5px); /* 少し上に浮き上がる */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.tool-card h3 {
+    margin: 0 0 10px 0;
+    color: #0056b3; /* カードのタイトル色 */
+    font-size: 1.4rem;
+}
+
+.tool-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+}

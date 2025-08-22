@@ -4,12 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ykshio tools</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="https://ykshio.github.io/ArticleNum/">条数漢算</a>
-    <a href="./punctuation-converter">句読点変換</a>
-	<a href="./deleteLF">改行削除</a>
-    <a href="./brickBreaker">ブロック崩し</a>
+
+    <div class="container">
+        <header>
+            <h1>ykshio tools 🛠️</h1>
+            <p>便利なウェブツール一覧</p>
+        </header>
+
+        <main>
+            <div class="tool-grid">
+                <a href="https://ykshio.github.io/ArticleNum/" class="tool-card">
+                    <h3>条数漢算</h3>
+                    <p>漢数字と算用数字を相互に変換します。</p>
+                </a>
+                <a href="./punctuation-converter" class="tool-card">
+                    <h3>句読点変換</h3>
+                    <p>文章の句読点を「、。」と「, .」で相互変換します。</p>
+                </a>
+                <a href="./deleteLF" class="tool-card">
+                    <h3>改行削除</h3>
+                    <p>文章中の不要な改行を削除・整形します。</p>
+                </a>
+                <a href="./brickBreaker" class="tool-card">
+                    <h3>ブロック崩し</h3>
+                    <p>シンプルなブロック崩しゲームです。</p>
+                </a>
+                <a href="./qrcode" class="tool-card">
+                    <h3>QRコード一括生成</h3>
+                    <p>複数のURLからQRコードをまとめて作成します。</p>
+                </a>
+            </div>
+        </main>
+    </div>
 
 </body>
 </html>
