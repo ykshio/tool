@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #000000;
+  transition: background-color 0.3s ease;
+}
+
+.container {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.color-display {
+  margin-bottom: 1.5rem;
+}
+
+#color-code {
+  font-size: 2rem;
+  font-family: monospace;
+  font-weight: bold;
+  color: #333;
+}
+
+.rgb-selector {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rgb-selector label {
+  cursor: pointer;
+}
+
+.rgb-selector input[type="radio"] {
+  display: none;
+}
+
+.channel-label {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 3px solid transparent;
+}
+
+.channel-r {
+  background: #ffcccc;
+  color: #cc0000;
+}
+
+.channel-g {
+  background: #ccffcc;
+  color: #00cc00;
+}
+
+.channel-b {
+  background: #ccccff;
+  color: #0000cc;
+}
+
+.rgb-selector input[type="radio"]:checked + .channel-r {
+  border-color: #cc0000;
+}
+
+.rgb-selector input[type="radio"]:checked + .channel-g {
+  border-color: #00cc00;
+}
+
+.rgb-selector input[type="radio"]:checked + .channel-b {
+  border-color: #0000cc;
+}
+
+.value-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  max-width: 400px;
+}
+
+.value-btn {
+  padding: 10px 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.value-btn:hover {
+  background: #d0d0d0;
+  transform: scale(1.05);
+}
+
+.value-btn:active {
+  transform: scale(0.95);
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>カラーテスト</h1>
+
+    <!-- 現在のカラーコード表示 -->
+    <div class="color-display">
+      <span id="color-code">#000000</span>
+    </div>
+
+    <!-- RGB選択UI -->
+    <div class="rgb-selector">
+      <label>
+        <input type="radio" name="channel" value="r" checked>
+        <span class="channel-label channel-r">R</span>
+      </label>
+      <label>
+        <input type="radio" name="channel" value="g">
+        <span class="channel-label channel-g">G</span>
+      </label>
+      <label>
+        <input type="radio" name="channel" value="b">
+        <span class="channel-label channel-b">B</span>
+      </label>
+    </div>
+
+    <!-- 0~255の16ごとのボタン -->
+    <div class="value-buttons">
+      <button class="value-btn" data-value="0">0</button>
+      <button class="value-btn" data-value="16">16</button>
+      <button class="value-btn" data-value="32">32</button>
+      <button class="value-btn" data-value="48">48</button>
+      <button class="value-btn" data-value="64">64</button>
+      <button class="value-btn" data-value="80">80</button>
+      <button class="value-btn" data-value="96">96</button>
+      <button class="value-btn" data-value="112">112</button>
+      <button class="value-btn" data-value="128">128</button>
+      <button class="value-btn" data-value="144">144</button>
+      <button class="value-btn" data-value="160">160</button>
+      <button class="value-btn" data-value="176">176</button>
+      <button class="value-btn" data-value="192">192</button>
+      <button class="value-btn" data-value="208">208</button>
+      <button class="value-btn" data-value="224">224</button>
+      <button class="value-btn" data-value="240">240</button>
+      <button class="value-btn" data-value="255">255</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
