@@ -76,6 +76,15 @@ valueButtons.forEach(btn => {
   });
 });
 
+// リセットボタン
+const resetBtn = document.getElementById('reset-btn');
+resetBtn.addEventListener('click', () => {
+  colorState.r = 0;
+  colorState.g = 0;
+  colorState.b = 0;
+  updateBackgroundColor();
+});
+
 // 初期化
 updateButtonColors();
 updateBackgroundColor();
