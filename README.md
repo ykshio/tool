@@ -16,7 +16,7 @@ https://ykshio.github.io/tool/
 | [QRコード一括生成](./qrcode) | 複数のURLからQRコードをまとめて作成 |
 | [カラーテスト](./colortest) | カラーコードで遊べる |
 | [A〜Hルーレット](./roulette) | A〜Hからランダムに1つ選ぶ |
-| [全角チェッカー](./mitsuiesan) | 全角と半角の文字をチェック |
+| [mitsuiesan(全角チェッカー)](./mitsuiesan)| 全角と半角の文字をチェック |
 
 ## 技術スタック
 
