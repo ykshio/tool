@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A〜H ルーレット</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        #roulette {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px;
+            padding: 20px;
+            border: 3px solid #333;
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 50%;
+            background-color: #f8f8f8;
+        }
+        #spinButton {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>A〜H ルーレット</h1>
+    <div id="roulette">?</div><br>
+    <button id="spinButton">ルーレットを回す</button>
+
+    <script>
+        function spinRoulette() {
+            const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
+            let counter = 0;
+            let interval = setInterval(() => {
+                document.getElementById("roulette").textContent = letters[Math.floor(Math.random() * letters.length)];
+                counter++;
+                if (counter > 10) { // 1秒後に結果を確定
+                    clearInterval(interval);
+                    document.getElementById("roulette").textContent = letters[Math.floor(Math.random() * letters.length)];
+                }
+            }, 100);
+        }
+
+        document.getElementById("spinButton").addEventListener("click", spinRoulette);
+    </script>
+
+</body>
+</html>
