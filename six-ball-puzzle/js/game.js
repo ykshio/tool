@@ -173,10 +173,16 @@ const Game = {
     },
 
     lockPiece() {
-        // Balls fall independently when piece locks
+        // Place balls at their current positions
         const cells = this.currentPiece.getCells();
-        Board.placeBalls(cells);
+        for (const cell of cells) {
+            Board.setCell(cell.row, cell.col, cell.color);
+        }
         this.currentPiece = null;
+
+        // Apply gravity so all balls fall down
+        Board.applyGravity();
+
         this.checkMatches();
     },
 

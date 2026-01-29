@@ -145,37 +145,21 @@ const Renderer = {
         const spacing = this.cellSize * 0.7;
         const radius = this.ballRadius * 0.7;
 
-        // Get positions based on rotation
         let positions;
-        const rot = piece.rotation;
 
-        if (rot === 0) {
-            // Point up
+        if (piece.rotation === 0) {
+            // △ Point up
             positions = [
                 { x: centerX, y: centerY - spacing * 0.5 },
                 { x: centerX - spacing * 0.5, y: centerY + spacing * 0.4 },
                 { x: centerX + spacing * 0.5, y: centerY + spacing * 0.4 }
             ];
-        } else if (rot === 3) {
-            // Point down
+        } else {
+            // ▽ Point down
             positions = [
                 { x: centerX - spacing * 0.5, y: centerY - spacing * 0.4 },
                 { x: centerX + spacing * 0.5, y: centerY - spacing * 0.4 },
                 { x: centerX, y: centerY + spacing * 0.5 }
-            ];
-        } else if (rot === 1 || rot === 5) {
-            // Diagonal leaning
-            positions = [
-                { x: centerX - spacing * 0.3, y: centerY - spacing * 0.6 },
-                { x: centerX - spacing * 0.3, y: centerY },
-                { x: centerX + spacing * 0.3, y: centerY + spacing * 0.6 }
-            ];
-        } else {
-            // rot === 2 || rot === 4
-            positions = [
-                { x: centerX + spacing * 0.3, y: centerY - spacing * 0.6 },
-                { x: centerX + spacing * 0.3, y: centerY },
-                { x: centerX - spacing * 0.3, y: centerY + spacing * 0.6 }
             ];
         }
 
@@ -209,7 +193,6 @@ const Renderer = {
         this.drawBoard();
 
         if (game.state === 'playing') {
-            this.drawGhost(game.currentPiece);
             this.drawPiece(game.currentPiece);
         } else if (game.state === 'clearing') {
             this.drawClearingEffect(game.matchesToClear, game.clearProgress);
