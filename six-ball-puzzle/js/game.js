@@ -177,21 +177,51 @@ const Game = {
         const matches = Board.findMatches();
 
         if (matches.length > 0) {
-            this.matchesToClear = matches;
             this.state = 'clearing';
             this.clearStartTime = performance.now();
             this.clearProgress = 0;
             this.combo++;
 
-            // Calculate score
-            let totalCleared = 0;
+            // Check for waza and expand to all same-colored balls
+            let expandedMatches = [];
+            let wazaColors = new Set();
             let maxMultiplier = 1;
 
             for (const group of matches) {
-                totalCleared += group.length;
                 const waza = Board.detectWaza(group);
-                if (waza && waza.multiplier > maxMultiplier) {
-                    maxMultiplier = waza.multiplier;
+                if (waza) {
+                    // Waza detected! Get the color and mark for full clear
+                    const color = group[0].color;
+                    wazaColors.add(color);
+                    if (waza.multiplier > maxMultiplier) {
+                        maxMultiplier = waza.multiplier;
+                    }
+                } else {
+                    // Normal match, just add the group
+                    expandedMatches.push(group);
+                }
+            }
+
+            // For each waza color, get ALL balls of that color
+            for (const color of wazaColors) {
+                const allOfColor = Board.getAllCellsOfColor(color);
+                if (allOfColor.length > 0) {
+                    expandedMatches.push(allOfColor);
+                }
+            }
+
+            this.matchesToClear = expandedMatches;
+
+            // Calculate score
+            let totalCleared = 0;
+            const countedCells = new Set();
+            for (const group of expandedMatches) {
+                for (const cell of group) {
+                    const key = `${cell.row},${cell.col}`;
+                    if (!countedCells.has(key)) {
+                        countedCells.add(key);
+                        totalCleared++;
+                    }
                 }
             }
 

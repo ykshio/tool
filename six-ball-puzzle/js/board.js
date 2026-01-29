@@ -259,5 +259,18 @@ const Board = {
         }
 
         return false;
+    },
+
+    // Get all cells of a specific color on the board
+    getAllCellsOfColor(color) {
+        const cells = [];
+        for (let row = 0; row < this.TOTAL_ROWS; row++) {
+            for (let col = 0; col < this.COLS; col++) {
+                if (this.grid[row][col] === color) {
+                    cells.push({ row, col, color });
+                }
+            }
+        }
+        return cells;
     }
 };
