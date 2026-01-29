@@ -94,7 +94,8 @@ const Game = {
         this.nextPiece = Piece.spawn();
 
         // Check if spawn position is valid
-        if (!Board.canPlace(this.currentPiece)) {
+        const cells = this.currentPiece.getCells();
+        if (!Board.canPlace(cells)) {
             this.gameOver();
         }
     },
@@ -104,8 +105,9 @@ const Game = {
 
         const newPiece = this.currentPiece.clone();
         newPiece.move(dRow, dCol);
+        const cells = newPiece.getCells();
 
-        if (Board.canPlace(newPiece)) {
+        if (Board.canPlace(cells)) {
             this.currentPiece = newPiece;
         }
     },
@@ -125,7 +127,8 @@ const Game = {
         for (const kick of kicks) {
             const testPiece = newPiece.clone();
             testPiece.move(0, kick);
-            if (Board.canPlace(testPiece)) {
+            const cells = testPiece.getCells();
+            if (Board.canPlace(cells)) {
                 this.currentPiece = testPiece;
                 return;
             }
@@ -137,8 +140,9 @@ const Game = {
 
         const newPiece = this.currentPiece.clone();
         newPiece.move(1, 0);
+        const cells = newPiece.getCells();
 
-        if (Board.canPlace(newPiece)) {
+        if (Board.canPlace(cells)) {
             this.currentPiece = newPiece;
             this.score += 1;
             this.updateUI();
@@ -154,7 +158,8 @@ const Game = {
         while (true) {
             const newPiece = this.currentPiece.clone();
             newPiece.move(1, 0);
-            if (Board.canPlace(newPiece)) {
+            const cells = newPiece.getCells();
+            if (Board.canPlace(cells)) {
                 this.currentPiece = newPiece;
                 dropDistance++;
             } else {
@@ -168,7 +173,9 @@ const Game = {
     },
 
     lockPiece() {
-        Board.placePiece(this.currentPiece);
+        // Balls fall independently when piece locks
+        const cells = this.currentPiece.getCells();
+        Board.placeBalls(cells);
         this.currentPiece = null;
         this.checkMatches();
     },
@@ -294,8 +301,9 @@ const Game = {
 
                 const newPiece = this.currentPiece.clone();
                 newPiece.move(1, 0);
+                const cells = newPiece.getCells();
 
-                if (Board.canPlace(newPiece)) {
+                if (Board.canPlace(cells)) {
                     this.currentPiece = newPiece;
                 } else {
                     this.lockPiece();

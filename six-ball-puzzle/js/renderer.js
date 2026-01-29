@@ -1,11 +1,12 @@
 // Renderer for 6 Ball Puzzle
+// Honeycomb grid rendering
 const Renderer = {
     canvas: null,
     ctx: null,
     nextCanvas: null,
     nextCtx: null,
     cellSize: 36,
-    ballRadius: 15,
+    ballRadius: 16,
 
     init() {
         this.canvas = document.getElementById('game-canvas');
@@ -13,12 +14,20 @@ const Renderer = {
         this.nextCanvas = document.getElementById('next-canvas');
         this.nextCtx = this.nextCanvas.getContext('2d');
 
-        // Set canvas sizes
-        this.canvas.width = Board.COLS * this.cellSize;
+        // Set canvas sizes (add extra width for honeycomb offset)
+        this.canvas.width = Board.COLS * this.cellSize + this.cellSize / 2;
         this.canvas.height = Board.ROWS * this.cellSize;
 
         this.nextCanvas.width = 3 * this.cellSize;
         this.nextCanvas.height = 3 * this.cellSize;
+    },
+
+    // Get pixel position for a cell in honeycomb grid
+    getCellPosition(row, col) {
+        const isOffset = Board.isOffsetRow(row);
+        const x = col * this.cellSize + this.cellSize / 2 + (isOffset ? this.cellSize / 2 : 0);
+        const y = row * this.cellSize + this.cellSize / 2;
+        return { x, y };
     },
 
     clear() {
@@ -27,28 +36,27 @@ const Renderer = {
     },
 
     drawGrid() {
-        this.ctx.strokeStyle = '#1a1a2e';
-        this.ctx.lineWidth = 1;
+        this.ctx.globalAlpha = 0.15;
 
-        // Vertical lines
-        for (let col = 0; col <= Board.COLS; col++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(col * this.cellSize, 0);
-            this.ctx.lineTo(col * this.cellSize, this.canvas.height);
-            this.ctx.stroke();
+        // Draw honeycomb grid dots
+        for (let row = 0; row < Board.ROWS; row++) {
+            for (let col = 0; col < Board.COLS; col++) {
+                const displayRow = row + Board.SPAWN_ROWS;
+                const { x, y } = this.getCellPosition(displayRow, col);
+                const displayY = y - Board.SPAWN_ROWS * this.cellSize;
+
+                this.ctx.beginPath();
+                this.ctx.arc(x, displayY, 3, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#444';
+                this.ctx.fill();
+            }
         }
 
-        // Horizontal lines
-        for (let row = 0; row <= Board.ROWS; row++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, row * this.cellSize);
-            this.ctx.lineTo(this.canvas.width, row * this.cellSize);
-            this.ctx.stroke();
-        }
+        this.ctx.globalAlpha = 1;
     },
 
     drawBall(ctx, x, y, color, radius = this.ballRadius) {
-        // Main ball
+        // Main ball with gradient
         const gradient = ctx.createRadialGradient(
             x - radius * 0.3, y - radius * 0.3, radius * 0.1,
             x, y, radius
@@ -71,15 +79,14 @@ const Renderer = {
     },
 
     drawBoard() {
-        // Draw placed balls (offset by spawn rows)
+        // Draw placed balls (offset by spawn rows for display)
         for (let row = Board.SPAWN_ROWS; row < Board.TOTAL_ROWS; row++) {
             for (let col = 0; col < Board.COLS; col++) {
                 const color = Board.getCell(row, col);
                 if (color) {
-                    const displayRow = row - Board.SPAWN_ROWS;
-                    const x = col * this.cellSize + this.cellSize / 2;
-                    const y = displayRow * this.cellSize + this.cellSize / 2;
-                    this.drawBall(this.ctx, x, y, color);
+                    const { x, y } = this.getCellPosition(row, col);
+                    const displayY = y - Board.SPAWN_ROWS * this.cellSize;
+                    this.drawBall(this.ctx, x, displayY, color);
                 }
             }
         }
@@ -92,10 +99,9 @@ const Renderer = {
         for (const cell of cells) {
             // Only draw if in visible area
             if (cell.row >= Board.SPAWN_ROWS) {
-                const displayRow = cell.row - Board.SPAWN_ROWS;
-                const x = cell.col * this.cellSize + this.cellSize / 2;
-                const y = displayRow * this.cellSize + this.cellSize / 2;
-                this.drawBall(this.ctx, x, y, cell.color);
+                const { x, y } = this.getCellPosition(cell.row, cell.col);
+                const displayY = y - Board.SPAWN_ROWS * this.cellSize;
+                this.drawBall(this.ctx, x, displayY, cell.color);
             }
         }
     },
@@ -103,23 +109,22 @@ const Renderer = {
     drawGhost(piece) {
         if (!piece) return;
 
-        // Find where piece would land
-        const ghost = piece.clone();
-        while (Board.canPlace(ghost)) {
-            ghost.move(1, 0);
-        }
-        ghost.move(-1, 0);
+        // Find where each ball would land independently
+        const cells = piece.getCells();
 
-        // Draw ghost
-        const cells = ghost.getCells();
         for (const cell of cells) {
-            if (cell.row >= Board.SPAWN_ROWS) {
-                const displayRow = cell.row - Board.SPAWN_ROWS;
-                const x = cell.col * this.cellSize + this.cellSize / 2;
-                const y = displayRow * this.cellSize + this.cellSize / 2;
+            // Each ball falls independently
+            let landingRow = cell.row;
+            while (landingRow < Board.TOTAL_ROWS - 1 && Board.isEmpty(landingRow + 1, cell.col)) {
+                landingRow++;
+            }
+
+            if (landingRow >= Board.SPAWN_ROWS) {
+                const { x, y } = this.getCellPosition(landingRow, cell.col);
+                const displayY = y - Board.SPAWN_ROWS * this.cellSize;
 
                 this.ctx.beginPath();
-                this.ctx.arc(x, y, this.ballRadius, 0, Math.PI * 2);
+                this.ctx.arc(x, displayY, this.ballRadius, 0, Math.PI * 2);
                 this.ctx.strokeStyle = cell.color;
                 this.ctx.lineWidth = 2;
                 this.ctx.globalAlpha = 0.3;
@@ -135,17 +140,23 @@ const Renderer = {
         this.nextCtx.fillStyle = '#0a0a1a';
         this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
 
-        // Center the piece preview
-        const offsetX = this.cellSize * 1.5;
-        const offsetY = this.cellSize;
+        // Draw triangle preview centered
+        const centerX = this.nextCanvas.width / 2;
+        const centerY = this.nextCanvas.height / 2;
+        const spacing = this.cellSize * 0.8;
+        const radius = this.ballRadius * 0.8;
 
-        const cells = piece.getCells();
-        const minCol = Math.min(...cells.map(c => c.col - piece.col));
+        // Always show as point-up triangle for preview
+        //    0
+        //   1 2
+        const positions = [
+            { x: centerX, y: centerY - spacing * 0.4 },           // top
+            { x: centerX - spacing * 0.5, y: centerY + spacing * 0.4 }, // bottom-left
+            { x: centerX + spacing * 0.5, y: centerY + spacing * 0.4 }  // bottom-right
+        ];
 
-        for (const cell of cells) {
-            const x = (cell.col - piece.col - minCol) * this.cellSize + offsetX;
-            const y = (cell.row - piece.row) * this.cellSize + offsetY;
-            this.drawBall(this.nextCtx, x, y, cell.color, this.ballRadius * 0.8);
+        for (let i = 0; i < 3; i++) {
+            this.drawBall(this.nextCtx, positions[i].x, positions[i].y, piece.colors[i], radius);
         }
     },
 
@@ -153,15 +164,14 @@ const Renderer = {
         for (const group of matches) {
             for (const cell of group) {
                 if (cell.row >= Board.SPAWN_ROWS) {
-                    const displayRow = cell.row - Board.SPAWN_ROWS;
-                    const x = cell.col * this.cellSize + this.cellSize / 2;
-                    const y = displayRow * this.cellSize + this.cellSize / 2;
+                    const { x, y } = this.getCellPosition(cell.row, cell.col);
+                    const displayY = y - Board.SPAWN_ROWS * this.cellSize;
 
                     const scale = 1 + progress * 0.5;
                     const alpha = 1 - progress;
 
                     this.ctx.beginPath();
-                    this.ctx.arc(x, y, this.ballRadius * scale, 0, Math.PI * 2);
+                    this.ctx.arc(x, displayY, this.ballRadius * scale, 0, Math.PI * 2);
                     this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.8})`;
                     this.ctx.fill();
                 }
