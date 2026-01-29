@@ -145,9 +145,12 @@ const Renderer = {
         const spacing = this.cellSize * 0.7;
         const radius = this.ballRadius * 0.7;
 
+        // Get colors with rotation applied
+        const colors = piece.getColors();
+
         let positions;
 
-        if (piece.rotation === 0) {
+        if (piece.shapeType === 0) {
             // △ Point up
             positions = [
                 { x: centerX, y: centerY - spacing * 0.5 },
@@ -164,7 +167,7 @@ const Renderer = {
         }
 
         for (let i = 0; i < 3; i++) {
-            this.drawBall(this.nextCtx, positions[i].x, positions[i].y, piece.colors[i], radius);
+            this.drawBall(this.nextCtx, positions[i].x, positions[i].y, colors[i], radius);
         }
     },
 

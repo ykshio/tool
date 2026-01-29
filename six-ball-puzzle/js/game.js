@@ -173,16 +173,25 @@ const Game = {
     },
 
     lockPiece() {
-        // Place balls at their current positions
+        // Each ball falls independently to the bottom
         const cells = this.currentPiece.getCells();
+
+        // Sort by row descending (process bottom balls first so they stack correctly)
+        cells.sort((a, b) => b.row - a.row);
+
         for (const cell of cells) {
-            Board.setCell(cell.row, cell.col, cell.color);
+            let row = cell.row;
+            const col = cell.col;
+
+            // Fall until hitting bottom or another ball
+            while (row < Board.TOTAL_ROWS - 1 && Board.isEmpty(row + 1, col)) {
+                row++;
+            }
+
+            Board.setCell(row, col, cell.color);
         }
+
         this.currentPiece = null;
-
-        // Apply gravity so all balls fall down
-        Board.applyGravity();
-
         this.checkMatches();
     },
 
