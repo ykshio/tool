@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 Ball Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>6 BALL PUZZLE</h1>
+            <div id="score-display">SCORE: <span id="score">0</span></div>
+        </header>
+
+        <main>
+            <div id="game-area">
+                <canvas id="game-canvas"></canvas>
+                <div id="overlay" class="hidden">
+                    <div id="overlay-content">
+                        <h2 id="overlay-title">6 BALL PUZZLE</h2>
+                        <p id="overlay-message">Press SPACE to Start</p>
+                        <div id="final-score" class="hidden"></div>
+                    </div>
+                </div>
+            </div>
+
+            <aside id="info-panel">
+                <div id="next-piece">
+                    <h3>NEXT</h3>
+                    <canvas id="next-canvas"></canvas>
+                </div>
+
+                <div id="stats">
+                    <p>LEVEL: <span id="level">1</span></p>
+                    <p>LINES: <span id="lines">0</span></p>
+                </div>
+
+                <div id="controls">
+                    <h3>CONTROLS</h3>
+                    <ul>
+                        <li>← → / A D : Move</li>
+                        <li>↑ / W : Hard Drop</li>
+                        <li>↓ / S : Soft Drop</li>
+                        <li>Space : Rotate CW</li>
+                        <li>Shift : Rotate CCW</li>
+                        <li>P / Esc : Pause</li>
+                    </ul>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="js/board.js"></script>
+    <script src="js/piece.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
