@@ -1,72 +1,108 @@
 // Piece management for 6 Ball Puzzle
 // 3 balls in equilateral triangle formation (honeycomb grid)
-//    ○      <- top (row 0)
-//   ○ ○     <- bottom left & right (row 1)
+// Two base shapes that rotate 60 degrees each step (6 rotations total)
+//
+// Type A (point up):    Type B (point down):
+//      ○                    ○ ○
+//     ○ ○                    ○
 
 const Piece = {
     // Colors: red, blue, purple, yellow, green (5 colors)
     COLORS: ['#ff6b6b', '#48dbfb', '#a55eea', '#feca57', '#26de81'],
     COLOR_NAMES: ['red', 'blue', 'purple', 'yellow', 'green'],
 
-    // Triangle formations for honeycomb grid
-    // The piece rotates around its center
-    // Rotation 0: point up (default)
-    //    0
-    //   1 2
-    // Rotation 1: point right
-    //   0 1
-    //    2
-    // Rotation 2: point down
-    //   1 2
-    //    0
-    // Rotation 3: point left
-    //    0
-    //   1 2  (but mirrored)
-
     createPiece(centerRow, centerCol) {
+        // Randomly choose starting shape (point up or point down)
+        const startRotation = Math.floor(Math.random() * 2) * 3; // 0 or 3
+
         return {
             row: centerRow,
             col: centerCol,
-            rotation: 0,
+            rotation: startRotation, // 0-5 (60 degrees each)
             colors: [
                 Piece.randomColor(),
                 Piece.randomColor(),
                 Piece.randomColor()
             ],
 
-            // Get cell positions based on current rotation and honeycomb offset
+            // Get cell positions based on rotation
+            // Rotation 0: point up (○ on top)
+            // Rotation 1: 60° CW
+            // Rotation 2: 120° CW
+            // Rotation 3: point down (○ on bottom)
+            // Rotation 4: 240° CW
+            // Rotation 5: 300° CW
             getCells: function() {
-                const isOffset = Board.isOffsetRow(this.row);
-                const isBottomOffset = Board.isOffsetRow(this.row + 1);
+                const r = this.row;
+                const c = this.col;
+                const isOffset = Board.isOffsetRow(r);
+                const isNextOffset = Board.isOffsetRow(r + 1);
+                const isPrevOffset = Board.isOffsetRow(r - 1);
+
                 let cells = [];
 
                 switch (this.rotation) {
-                    case 0: // Point up:  ○ on top, ○ ○ on bottom
+                    case 0: // Point up: ○ on top, ○○ on bottom
+                        //    0
+                        //   1 2
                         cells = [
-                            { row: this.row, col: this.col, color: this.colors[0] },
-                            { row: this.row + 1, col: isBottomOffset ? this.col - 1 : this.col - 1, color: this.colors[1] },
-                            { row: this.row + 1, col: isBottomOffset ? this.col : this.col, color: this.colors[2] }
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r + 1, col: isNextOffset ? c - 1 : c, color: this.colors[1] },
+                            { row: r + 1, col: isNextOffset ? c : c + 1, color: this.colors[2] }
                         ];
                         break;
-                    case 1: // Point right
+
+                    case 1: // 60° CW - leaning right
+                        //   0
+                        //   1
+                        //    2
                         cells = [
-                            { row: this.row, col: this.col - 1, color: this.colors[0] },
-                            { row: this.row, col: this.col, color: this.colors[1] },
-                            { row: this.row + 1, col: isBottomOffset ? this.col - 1 : this.col - 1, color: this.colors[2] }
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r + 1, col: isNextOffset ? c - 1 : c, color: this.colors[1] },
+                            { row: r + 2, col: c, color: this.colors[2] }
                         ];
                         break;
-                    case 2: // Point down: ○ ○ on top, ○ on bottom
+
+                    case 2: // 120° CW - leaning left
+                        //    0
+                        //    1
+                        //   2
                         cells = [
-                            { row: this.row + 1, col: isBottomOffset ? this.col : this.col - 1, color: this.colors[0] },
-                            { row: this.row, col: this.col - 1, color: this.colors[1] },
-                            { row: this.row, col: this.col, color: this.colors[2] }
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r + 1, col: isNextOffset ? c : c + 1, color: this.colors[1] },
+                            { row: r + 2, col: c, color: this.colors[2] }
                         ];
                         break;
-                    case 3: // Point left
+
+                    case 3: // Point down: ○○ on top, ○ on bottom
+                        //   0 1
+                        //    2
                         cells = [
-                            { row: this.row, col: this.col, color: this.colors[0] },
-                            { row: this.row + 1, col: isBottomOffset ? this.col : this.col, color: this.colors[1] },
-                            { row: this.row, col: this.col - 1, color: this.colors[2] }
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r, col: c + 1, color: this.colors[1] },
+                            { row: r + 1, col: isNextOffset ? c : c + 1, color: this.colors[2] }
+                        ];
+                        break;
+
+                    case 4: // 240° CW
+                        //    0
+                        //    1
+                        //   2
+                        cells = [
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r + 1, col: isNextOffset ? c : c + 1, color: this.colors[1] },
+                            { row: r + 2, col: c, color: this.colors[2] }
+                        ];
+                        break;
+
+                    case 5: // 300° CW
+                        //   0
+                        //   1
+                        //    2
+                        cells = [
+                            { row: r, col: c, color: this.colors[0] },
+                            { row: r + 1, col: isNextOffset ? c - 1 : c, color: this.colors[1] },
+                            { row: r + 2, col: c, color: this.colors[2] }
                         ];
                         break;
                 }
@@ -80,11 +116,11 @@ const Piece = {
             },
 
             rotateCW: function() {
-                this.rotation = (this.rotation + 1) % 4;
+                this.rotation = (this.rotation + 1) % 6;
             },
 
             rotateCCW: function() {
-                this.rotation = (this.rotation + 3) % 4;
+                this.rotation = (this.rotation + 5) % 6;
             },
 
             clone: function() {
@@ -107,7 +143,7 @@ const Piece = {
     // Create a new piece at spawn position
     spawn() {
         const startCol = Math.floor(Board.COLS / 2);
-        const startRow = 1;
+        const startRow = 0;
         return this.createPiece(startRow, startCol);
     }
 };

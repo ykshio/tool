@@ -49,7 +49,10 @@ const Board = {
 
     // Place individual balls (not as a piece, balls fall independently)
     placeBalls(balls) {
-        for (const ball of balls) {
+        // Sort balls by row descending (bottom first) so they stack correctly
+        const sortedBalls = [...balls].sort((a, b) => b.row - a.row);
+
+        for (const ball of sortedBalls) {
             // Each ball falls independently to its resting position
             let row = ball.row;
             const col = ball.col;

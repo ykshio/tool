@@ -140,20 +140,44 @@ const Renderer = {
         this.nextCtx.fillStyle = '#0a0a1a';
         this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
 
-        // Draw triangle preview centered
         const centerX = this.nextCanvas.width / 2;
         const centerY = this.nextCanvas.height / 2;
-        const spacing = this.cellSize * 0.8;
-        const radius = this.ballRadius * 0.8;
+        const spacing = this.cellSize * 0.7;
+        const radius = this.ballRadius * 0.7;
 
-        // Always show as point-up triangle for preview
-        //    0
-        //   1 2
-        const positions = [
-            { x: centerX, y: centerY - spacing * 0.4 },           // top
-            { x: centerX - spacing * 0.5, y: centerY + spacing * 0.4 }, // bottom-left
-            { x: centerX + spacing * 0.5, y: centerY + spacing * 0.4 }  // bottom-right
-        ];
+        // Get positions based on rotation
+        let positions;
+        const rot = piece.rotation;
+
+        if (rot === 0) {
+            // Point up
+            positions = [
+                { x: centerX, y: centerY - spacing * 0.5 },
+                { x: centerX - spacing * 0.5, y: centerY + spacing * 0.4 },
+                { x: centerX + spacing * 0.5, y: centerY + spacing * 0.4 }
+            ];
+        } else if (rot === 3) {
+            // Point down
+            positions = [
+                { x: centerX - spacing * 0.5, y: centerY - spacing * 0.4 },
+                { x: centerX + spacing * 0.5, y: centerY - spacing * 0.4 },
+                { x: centerX, y: centerY + spacing * 0.5 }
+            ];
+        } else if (rot === 1 || rot === 5) {
+            // Diagonal leaning
+            positions = [
+                { x: centerX - spacing * 0.3, y: centerY - spacing * 0.6 },
+                { x: centerX - spacing * 0.3, y: centerY },
+                { x: centerX + spacing * 0.3, y: centerY + spacing * 0.6 }
+            ];
+        } else {
+            // rot === 2 || rot === 4
+            positions = [
+                { x: centerX + spacing * 0.3, y: centerY - spacing * 0.6 },
+                { x: centerX + spacing * 0.3, y: centerY },
+                { x: centerX - spacing * 0.3, y: centerY + spacing * 0.6 }
+            ];
+        }
 
         for (let i = 0; i < 3; i++) {
             this.drawBall(this.nextCtx, positions[i].x, positions[i].y, piece.colors[i], radius);
