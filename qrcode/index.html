@@ -12,7 +12,18 @@
         <p>URLを1行に1つずつ入力してください。リアルタイムで下にQRコードが生成されます。</p>
         
         <textarea id="urls" rows="10" placeholder="https://www.google.com&#10;https://www.github.com"></textarea>
-        
+
+        <div class="options-container">
+            <label class="toggle-label">
+                <span>背景</span>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="transparent-bg" />
+                    <span class="toggle-slider"></span>
+                </div>
+                <span id="bg-label">白</span>
+            </label>
+        </div>
+
         <div class="actions-container">
             <button id="download-all-zip" style="display: none;">📥 すべてをZIPで一括ダウンロード</button>
         </div>
