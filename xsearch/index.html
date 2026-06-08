@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X検索ビルダー</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>X検索ビルダー 🔍</h1>
+        <p class="lead">高度な検索演算子をGUIで組み立てて、Xの検索ページを開きます。<br>APIキー不要・完全無料。X側の仕様でいいね順の並べ替えはできないため、<b>min_faves（いいね数しきい値）</b>で代替します。</p>
+
+        <!-- アカウント -->
+        <section class="field-group">
+            <h2>アカウント</h2>
+            <label class="field">
+                <span>投稿者 (from:)</span>
+                <input type="text" id="from" placeholder="自分のID（@は不要、スペース区切りで複数可）">
+            </label>
+            <label class="field">
+                <span>宛先 (to:)</span>
+                <input type="text" id="to" placeholder="返信先のID">
+            </label>
+            <label class="field">
+                <span>除外する投稿者 (-from:)</span>
+                <input type="text" id="exclude-from" placeholder="このIDの投稿を除く">
+            </label>
+        </section>
+
+        <!-- キーワード -->
+        <section class="field-group">
+            <h2>キーワード</h2>
+            <label class="field">
+                <span>含む語</span>
+                <input type="text" id="keywords" placeholder="スペース区切りでAND検索">
+            </label>
+            <label class="field">
+                <span>完全一致フレーズ</span>
+                <input type="text" id="phrase" placeholder="この語順そのまま">
+            </label>
+            <label class="field">
+                <span>除外する語 (-)</span>
+                <input type="text" id="exclude-words" placeholder="含めたくない語">
+            </label>
+            <label class="field">
+                <span>ハッシュタグ (#)</span>
+                <input type="text" id="hashtag" placeholder="#は不要">
+            </label>
+        </section>
+
+        <!-- 期間 -->
+        <section class="field-group">
+            <h2>期間</h2>
+            <div class="date-row">
+                <label class="field">
+                    <span>開始日 (since:)</span>
+                    <input type="date" id="since">
+                </label>
+                <label class="field">
+                    <span>終了日 (until:)</span>
+                    <input type="date" id="until">
+                </label>
+            </div>
+            <div class="quick-dates">
+                <button type="button" data-range="7">過去7日</button>
+                <button type="button" data-range="30">過去30日</button>
+                <button type="button" data-range="90">過去90日</button>
+                <button type="button" data-range="365">過去1年</button>
+                <button type="button" data-range="clear">クリア</button>
+            </div>
+        </section>
+
+        <!-- 人気度（いいね順の代替） -->
+        <section class="field-group">
+            <h2>人気度しきい値 <small>（いいね順ソートの代替）</small></h2>
+            <label class="field">
+                <span>いいね数 (min_faves) 以上</span>
+                <input type="number" id="min-faves" min="0" step="10" value="0" placeholder="0">
+            </label>
+            <label class="field">
+                <span>リポスト数 (min_retweets) 以上</span>
+                <input type="number" id="min-retweets" min="0" step="10" value="0" placeholder="0">
+            </label>
+            <label class="field">
+                <span>返信数 (min_replies) 以上</span>
+                <input type="number" id="min-replies" min="0" step="10" value="0" placeholder="0">
+            </label>
+        </section>
+
+        <!-- 種類フィルタ -->
+        <section class="field-group">
+            <h2>種類で絞り込み</h2>
+            <div class="toggle-grid">
+                <label class="toggle-label"><span>リポストのみ</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-rt"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>リポストを除く</span>
+                    <span class="toggle-switch"><input type="checkbox" id="no-rt"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>返信を除く</span>
+                    <span class="toggle-switch"><input type="checkbox" id="no-replies"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>メディア付きのみ</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-media"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>画像のみ</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-images"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>動画のみ</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-videos"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>リンク付きのみ</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-links"><span class="toggle-slider"></span></span></label>
+                <label class="toggle-label"><span>日本語のみ (lang:ja)</span>
+                    <span class="toggle-switch"><input type="checkbox" id="only-ja"><span class="toggle-slider"></span></span></label>
+            </div>
+        </section>
+
+        <!-- 並び順タブ -->
+        <section class="field-group">
+            <h2>表示</h2>
+            <div class="radio-row">
+                <label><input type="radio" name="tab" value="live" checked> 最新順</label>
+                <label><input type="radio" name="tab" value="top"> 話題</label>
+            </div>
+        </section>
+
+        <!-- プレビュー -->
+        <section class="field-group">
+            <h2>検索クエリ</h2>
+            <textarea id="query-preview" rows="2" readonly placeholder="ここに生成されたクエリが表示されます"></textarea>
+        </section>
+
+        <div class="actions">
+            <button id="search-btn" class="primary">Xで検索 ↗</button>
+            <button id="copy-btn">クエリをコピー</button>
+            <button id="reset-btn">リセット</button>
+        </div>
+        <p class="hint">※ ブラウザでXにログインしておくと、自分の投稿やプロフィールに合った結果が表示されます。</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+h1 {
+    text-align: center;
+    margin: 0 0 10px;
+}
+.lead {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 25px;
+}
+
+/* --- セクション --- */
+.field-group {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+}
+.field-group h2 {
+    font-size: 1.05rem;
+    margin: 0 0 12px;
+    color: #1d3557;
+}
+.field-group h2 small {
+    font-size: 0.75rem;
+    color: #999;
+    font-weight: normal;
+}
+
+/* --- 各入力 --- */
+.field {
+    display: block;
+    margin-bottom: 12px;
+}
+.field:last-child {
+    margin-bottom: 0;
+}
+.field > span {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 4px;
+}
+.field > span b {
+    color: #007bff;
+}
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 9px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* --- 日付 --- */
+.date-row {
+    display: flex;
+    gap: 12px;
+}
+.date-row .field {
+    flex: 1;
+}
+.quick-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.quick-dates button {
+    background: #f0f2f5;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.quick-dates button:hover {
+    background: #e2e6ea;
+}
+
+/* --- トグルグリッド --- */
+.toggle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 18px;
+}
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background-color: #ccc;
+    border-radius: 22px;
+    transition: background-color 0.2s;
+}
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #007bff;
+}
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(18px);
+}
+
+/* --- ラジオ --- */
+.radio-row {
+    display: flex;
+    gap: 24px;
+    font-size: 0.9rem;
+}
+.radio-row label {
+    cursor: pointer;
+}
+
+/* --- アクション --- */
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+.actions button {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+.actions button:hover {
+    background: #f0f2f5;
+}
+.actions .primary {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+    font-weight: 700;
+}
+.actions .primary:hover {
+    background: #333;
+}
+.hint {
+    font-size: 0.78rem;
+    color: #999;
+    margin-top: 14px;
+    text-align: center;
+}
