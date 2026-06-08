@@ -4,6 +4,8 @@ const qrcodeContainer = document.getElementById('qrcode-container');
 const downloadAllBtn = document.getElementById('download-all-zip');
 const transparentBgCheckbox = document.getElementById('transparent-bg');
 const bgLabel = document.getElementById('bg-label');
+const quietZoneCheckbox = document.getElementById('quiet-zone');
+const marginLabel = document.getElementById('margin-label');
 
 /**
  * URLから安全なファイル名を生成するヘルパー関数
@@ -29,12 +31,13 @@ function sanitizeFilename(url) {
  * @param {HTMLCanvasElement} srcCanvas - 元のQRコードcanvas
  * @param {number} moduleCount - QRコードのモジュール数（縦横のセル数）
  * @param {boolean} isTransparent - 背景を透過にするか
- * @returns {HTMLCanvasElement} 余白付きの新しいcanvas
+ * @param {boolean} withMargin - 余白を付けるか（falseなら余白なしで描き直す）
+ * @returns {HTMLCanvasElement} 新しいcanvas
  */
-function withQuietZone(srcCanvas, moduleCount, isTransparent) {
+function withQuietZone(srcCanvas, moduleCount, isTransparent, withMargin) {
     const srcSize = srcCanvas.width;
     const moduleSize = Math.round(srcSize / moduleCount);
-    const quietZone = moduleSize * 4; // ISO/IEC 18004: 4モジュール分の余白
+    const quietZone = withMargin ? moduleSize * 4 : 0; // ISO/IEC 18004: 4モジュール分の余白
     const newSize = srcSize + quietZone * 2;
 
     const canvas = document.createElement('canvas');
@@ -73,6 +76,7 @@ function generateQRCodes() {
     // 入力されたテキストを改行で分割し、空行は除外
     const urls = urlsTextarea.value.split('\n').filter(url => url.trim() !== '');
     const isTransparent = transparentBgCheckbox.checked;
+    const withMargin = quietZoneCheckbox.checked;
 
     // 一括ダウンロードボタンの表示/非表示を切り替え
     if (urls.length > 0) {
@@ -105,7 +109,7 @@ function generateQRCodes() {
         // 正確なモジュール数を取得し、規格準拠の余白を付けたcanvasを作り直す
         const rawCanvas = tempQrElement.querySelector('canvas');
         const moduleCount = qr._oQRCode.getModuleCount();
-        const canvas = withQuietZone(rawCanvas, moduleCount, isTransparent);
+        const canvas = withQuietZone(rawCanvas, moduleCount, isTransparent, withMargin);
 
         // 透過時はチェッカーパターンのプレビューを表示
         if (isTransparent) {
@@ -167,6 +171,12 @@ downloadAllBtn.addEventListener('click', () => {
 // 背景トグルの変更イベント
 transparentBgCheckbox.addEventListener('change', () => {
     bgLabel.textContent = transparentBgCheckbox.checked ? '透過' : '白';
+    generateQRCodes();
+});
+
+// 余白トグルの変更イベント
+quietZoneCheckbox.addEventListener('change', () => {
+    marginLabel.textContent = quietZoneCheckbox.checked ? 'あり' : 'なし';
     generateQRCodes();
 });
 
