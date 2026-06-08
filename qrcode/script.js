@@ -23,70 +23,44 @@ function sanitizeFilename(url) {
 }
 
 /**
- * QRコードのcanvasに規格準拠のクワイエットゾーン（余白）を追加する
- * ISO/IEC 18004 では4モジュール分の余白が必要
+ * 規格準拠の4モジュール分のクワイエットゾーン（余白）を付けたcanvasを生成する。
+ * 透過指定時は黒モジュールのみを残し、白背景時は白で塗りつぶす。
+ * ライブラリ生成canvasはdisplay:noneにされるため、ここで作り直すことで表示も担保する。
  * @param {HTMLCanvasElement} srcCanvas - 元のQRコードcanvas
- * @param {boolean} transparentBg - 背景を透過にするか
+ * @param {number} moduleCount - QRコードのモジュール数（縦横のセル数）
+ * @param {boolean} isTransparent - 背景を透過にするか
  * @returns {HTMLCanvasElement} 余白付きの新しいcanvas
  */
-function addQuietZone(srcCanvas, transparentBg) {
+function withQuietZone(srcCanvas, moduleCount, isTransparent) {
     const srcSize = srcCanvas.width;
-    // QRコードのモジュール数を推定（暗いピクセルの境界から計算）
-    const srcCtx = srcCanvas.getContext('2d');
-    const imageData = srcCtx.getImageData(0, 0, srcSize, srcSize);
-
-    // 最初の行をスキャンしてモジュールサイズを推定
-    let moduleSize = 0;
-    let firstPixelColor = imageData.data[0]; // 左上のピクセルの色
-    for (let x = 1; x < srcSize; x++) {
-        const idx = x * 4;
-        if (imageData.data[idx] !== firstPixelColor) {
-            moduleSize = x;
-            break;
-        }
-    }
-    if (moduleSize === 0) moduleSize = Math.round(srcSize / 33); // フォールバック
-
-    // 4モジュール分のクワイエットゾーン
-    const quietZone = moduleSize * 4;
+    const moduleSize = Math.round(srcSize / moduleCount);
+    const quietZone = moduleSize * 4; // ISO/IEC 18004: 4モジュール分の余白
     const newSize = srcSize + quietZone * 2;
 
-    const newCanvas = document.createElement('canvas');
-    newCanvas.width = newSize;
-    newCanvas.height = newSize;
-    const ctx = newCanvas.getContext('2d');
+    const canvas = document.createElement('canvas');
+    canvas.width = newSize;
+    canvas.height = newSize;
+    const ctx = canvas.getContext('2d');
 
-    if (!transparentBg) {
-        // 白背景で塗りつぶし
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, newSize, newSize);
-        ctx.drawImage(srcCanvas, quietZone, quietZone);
-    } else {
-        // 透過背景：QRコードの黒モジュールのみ描画
-        const srcData = srcCtx.getImageData(0, 0, srcSize, srcSize);
-        const newCtx = newCanvas.getContext('2d');
-        const newImageData = newCtx.createImageData(newSize, newSize);
-
+    if (isTransparent) {
+        // 黒モジュールのみを余白分オフセットしてコピー
+        const srcData = srcCanvas.getContext('2d').getImageData(0, 0, srcSize, srcSize);
+        const out = ctx.createImageData(newSize, newSize);
         for (let y = 0; y < srcSize; y++) {
             for (let x = 0; x < srcSize; x++) {
-                const srcIdx = (y * srcSize + x) * 4;
-                const r = srcData.data[srcIdx];
-                // 暗いピクセル（モジュール）のみコピー
-                if (r < 128) {
-                    const destX = x + quietZone;
-                    const destY = y + quietZone;
-                    const destIdx = (destY * newSize + destX) * 4;
-                    newImageData.data[destIdx] = srcData.data[srcIdx];
-                    newImageData.data[destIdx + 1] = srcData.data[srcIdx + 1];
-                    newImageData.data[destIdx + 2] = srcData.data[srcIdx + 2];
-                    newImageData.data[destIdx + 3] = 255;
+                if (srcData.data[(y * srcSize + x) * 4] < 128) {
+                    const dIdx = ((y + quietZone) * newSize + (x + quietZone)) * 4;
+                    out.data[dIdx + 3] = 255; // RGBは0のまま=黒、不透明にする
                 }
             }
         }
-        newCtx.putImageData(newImageData, 0, 0);
+        ctx.putImageData(out, 0, 0);
+    } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, newSize, newSize);
+        ctx.drawImage(srcCanvas, quietZone, quietZone);
     }
-
-    return newCanvas;
+    return canvas;
 }
 
 /**
@@ -119,7 +93,7 @@ function generateQRCodes() {
 
         // QRコードを生成する本体 (一時的な非表示要素に生成)
         const tempQrElement = document.createElement('div');
-        new QRCode(tempQrElement, {
+        const qr = new QRCode(tempQrElement, {
             text: url,
             width: 256,
             height: 256,
@@ -128,9 +102,10 @@ function generateQRCodes() {
             correctLevel: QRCode.CorrectLevel.H
         });
 
-        // 生成されたcanvas要素を取得し、クワイエットゾーンを追加
+        // 正確なモジュール数を取得し、規格準拠の余白を付けたcanvasを作り直す
         const rawCanvas = tempQrElement.querySelector('canvas');
-        const canvas = addQuietZone(rawCanvas, isTransparent);
+        const moduleCount = qr._oQRCode.getModuleCount();
+        const canvas = withQuietZone(rawCanvas, moduleCount, isTransparent);
 
         // 透過時はチェッカーパターンのプレビューを表示
         if (isTransparent) {
