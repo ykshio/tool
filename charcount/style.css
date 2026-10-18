@@ -1,0 +1,243 @@
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 820px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    text-align: center;
+    color: #1d3557;
+    margin: 0 0 8px;
+}
+
+.lead {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 24px;
+}
+
+/* --- 入力エリア --- */
+.input-section {
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.toggle-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: #444;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.toolbar-actions button {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.toolbar-actions button:hover {
+    background: #f0f2f5;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.12);
+}
+
+/* --- 全体統計カード --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 26px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-card.primary {
+    background: #eef5ff;
+    border-color: #cfe2ff;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1d3557;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-value small {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #666;
+}
+
+/* --- 行ごとの文字数 --- */
+.lines-section {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.lines-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.lines-header h2 {
+    font-size: 1.05rem;
+    margin: 0;
+    color: #1d3557;
+}
+
+.lines-summary {
+    font-size: 0.85rem;
+    color: #666;
+    font-variant-numeric: tabular-nums;
+}
+
+.lines-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+    padding: 24px 10px;
+}
+
+.line-row {
+    display: grid;
+    grid-template-columns: 52px 84px 1fr;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    font-size: 0.92rem;
+}
+
+.line-row:hover {
+    background: #f0f4f9;
+}
+
+.line-number {
+    color: #888;
+    font-size: 0.8rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+}
+
+.line-count-badge {
+    display: inline-block;
+    text-align: right;
+    font-weight: 700;
+    color: #0056b3;
+    background: #e7f1ff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.line-row.is-empty .line-count-badge {
+    color: #888;
+    background: #eee;
+    font-weight: 400;
+}
+
+.line-text {
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #333;
+}
+
+.line-row.is-empty .line-text {
+    color: #bbb;
+    font-style: italic;
+}
+
+@media (max-width: 520px) {
+    .container {
+        padding: 18px;
+    }
+    .line-row {
+        grid-template-columns: 42px 74px 1fr;
+        gap: 6px;
+        padding: 6px 8px;
+    }
+}

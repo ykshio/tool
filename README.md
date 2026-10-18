@@ -17,6 +17,7 @@ https://ykshio.github.io/tool/
 | [カラーテスト](./colortest) | カラーコードで遊べる |
 | [A〜Hルーレット](./roulette) | A〜Hからランダムに1つ選ぶ |
 | [mitsuiesan(全角チェッカー)](./mitsuiesan)| 全角と半角の文字をチェック |
+| [文字数カウンター](./charcount) | テキスト全体の文字数と行ごとの文字数をカウント |
 
 ## 技術スタック
 
