@@ -83,7 +83,9 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: 'BIZ UDGothic', 'Noto Sans Mono CJK JP', 'Osaka-Mono', 'MS Gothic', monospace;
+    font-feature-settings: "palt" 0, "pkna" 0;
+    font-kerning: none;
     resize: vertical;
     transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -224,6 +226,9 @@ textarea:focus {
     white-space: pre-wrap;
     word-break: break-all;
     color: #333;
+    font-family: 'BIZ UDGothic', 'Noto Sans Mono CJK JP', 'Osaka-Mono', 'MS Gothic', monospace;
+    font-feature-settings: "palt" 0, "pkna" 0;
+    font-kerning: none;
 }
 
 .line-row.is-empty .line-text {
